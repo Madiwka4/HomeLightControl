@@ -1,0 +1,51 @@
+﻿@using YeelightAPI
+@{
+    var status = "Unknown";
+    bool error = false;
+    ViewData["Title"] = "Light Controller";
+    if (ViewData["DEV1"] != null)
+    {
+        if ((bool)ViewData["DEV1"] && (bool)ViewData["DEV2"])
+        {
+            status = "Both Lights are ON";
+        }
+        else
+        {
+            status = "Both Lights are OFF";
+        }
+    }
+    else
+    {
+        //Redirect user to error page
+        error = true;
+
+    }
+
+}
+<div class = "outer" style="height: 100vh;">
+    <div class="wrapper text-center">
+        <h1 class="display-4">Light Control!</h1>
+        @{
+            if (!error)
+            {
+                <button type="button" onclick = "location.href='@Url.Action("Toggle", "Home")'" class="custom-button btn @{ if ((bool)ViewData["DEV1"]) {@Html.Raw("btn-success")} else {@Html.Raw("btn-danger")} }">
+                    @{
+                        if ((bool)ViewData["DEV1"])
+                        {
+                            <i class="custom-button-icon bi-lightbulb-fill" style="font-size: 10rem;"></i>
+                        }
+                        else
+                        {
+                            <i class="custom-button-icon bi bi-lightbulb" style="font-size: 10rem;"></i>
+                        }
+                    }
+                </button>
+                <p>@status</p>
+            }
+            else
+            {
+                <p>There was an error connecting to the lights</p>
+            }
+        }
+    </div>
+</div>
