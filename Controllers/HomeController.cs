@@ -17,7 +17,10 @@ public class HomeController : Controller
     {
         _logger = logger;
     }
-
+    private string ConvertToHex(Color color)
+    {
+        return "#" + color.R.ToString("X2") + color.G.ToString("X2") + color.B.ToString("X2");
+    }
     public IActionResult ChangeBrightness(int brightness)
     {
         YeelightService.ChangeBrightness(brightness);
@@ -55,9 +58,8 @@ public class HomeController : Controller
                 _logger.LogError(e.Message);
                 return Json(new { success = false });
             }
-        }
-        Color tmpColor = (Color)ViewData["DEV1RGB"];
-        string readableColor = ColorTranslator.ToHtml(tmpColor);
+        } ;
+        string readableColor = ConvertToHex((Color)ViewData["DEV1RGB"]);
         return Json(new { success = true, dev1 = ViewData["DEV1"].ToString(), dev1br = ViewData["DEV1BR"].ToString(), dev1rgb = readableColor});
     }
     public IActionResult Index()

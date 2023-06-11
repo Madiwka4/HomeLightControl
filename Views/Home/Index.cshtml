@@ -102,20 +102,20 @@
                     var obj = JSON.parse(JSON.stringify(data));
                     console.log(obj);
                     if (obj.success){
-                        
-                    $("#slider").val(obj.dev1br);
-                    $("#picker").val(obj.dev1rgb);
+                    
                     if (obj.dev1 === "True"){
                         $("#icon").removeClass("bi-lightbulb");
                         $("#icon").addClass("bi-lightbulb-fill");  
+                        console.log(obj.dev1rgb);
+                        console.log(InvertColor(obj.dev1rgb));
                         $("#mainBTN").css("background-color", obj.dev1rgb);
                         $("#mainBTN").css("color", InvertColor(obj.dev1rgb));
                     }
                     else{
                         $("#icon").removeClass("bi-lightbulb-fill");
                         $("#icon").addClass("bi-lightbulb");
-                        $("#mainBTN").css("background-color", "#FFFFFF");
-                        $("#mainBTN").css("color", "#000000");
+                        $("#mainBTN").css("background-color", "#000000");
+                        $("#mainBTN").css("color", "#FFFFFF");
                     }   
                     }
                     else{

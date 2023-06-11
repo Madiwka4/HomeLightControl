@@ -33,3 +33,7 @@ html {
     justify-content: center;
     align-items: center;
 }
+
+.btndiv{
+    padding: 1rem;
+}
