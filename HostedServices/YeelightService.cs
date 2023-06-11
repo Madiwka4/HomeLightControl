@@ -1,3 +1,4 @@
+using System.Drawing;
 using HomeLightControl.CustomClasses;
 using YeelightAPI;
 using YeelightAPI.Models;
@@ -42,14 +43,20 @@ public class YeelightService : IHostedService
                 //check if lights are still connected
                 var power = _lightOne.GetProp(PROPERTIES.power);
                 var brightness = _lightOne.GetProp(PROPERTIES.bright);
+                var color = _lightOne.GetProp(PROPERTIES.rgb).Result;
+                var lampset = _lightOne.GetProp(PROPERTIES.color_mode).Result;
                 lampData.IsOn = power.Result.ToString() != "off";
-                lampData.Brightness = Convert.ToInt32(brightness.Result);  
+                lampData.Brightness = Convert.ToInt32(brightness.Result);
+                lampData.Color = Color.FromArgb(Convert.ToInt32(color));
+                if ((string)lampset == "2")
+                {
+                    //set color to white
+                    lampData.Color = Color.White;
+                }
             }
             else
             {
                 await ReconnectToLamps();
-                lampData.IsOn = false;
-                lampData.Brightness = -1;
             }
         }
         else
@@ -59,14 +66,20 @@ public class YeelightService : IHostedService
                 //check if lights are still connected
                 var power = _lightTwo.GetProp(PROPERTIES.power);
                 var brightness = _lightTwo.GetProp(PROPERTIES.bright);
+                var color = _lightTwo.GetProp(PROPERTIES.rgb).Result;
+                var lampset = _lightOne.GetProp(PROPERTIES.color_mode).Result;
                 lampData.IsOn = power.Result.ToString() != "off";
                 lampData.Brightness = Convert.ToInt32(brightness.Result);  
+                lampData.Color = Color.FromArgb(Convert.ToInt32(color));
+                if ((string)lampset == "2")
+                {
+                    //set color to white
+                    lampData.Color = Color.White;
+                }
             }
             else
             {
                 await ReconnectToLamps();
-                lampData.IsOn = false;
-                lampData.Brightness = -1;
             }
         }
         return lampData;
@@ -76,8 +89,43 @@ public class YeelightService : IHostedService
     {
         if (_lightOne.IsConnected && _lightTwo.IsConnected)
         {
-            await _lights.SetBrightness(100);
             await _lights.Toggle();
+        }
+        else
+        {
+            await ReconnectToLamps();
+        }
+    }
+    public static async Task ChangeBrightness(int brightness)
+    {
+        if (_lightOne.IsConnected && _lightTwo.IsConnected)
+        {
+            await _lights.SetBrightness(brightness, 500);
+        }
+        else
+        {
+            await ReconnectToLamps();
+        }
+    }
+
+    public static async Task ResetToWhite()
+    {
+        if (_lightOne.IsConnected && _lightTwo.IsConnected)
+        {
+            await _lights.TurnOn();
+            await _lights.SetBrightness(100);
+            await _lights.SetColorTemperature(4000, 500);
+        }
+        else
+        {
+            await ReconnectToLamps();
+        }
+    }
+    public static async Task ChangeColor(Color color)
+    {
+        if (_lightOne.IsConnected && _lightTwo.IsConnected)
+        {
+            await _lights.SetRGBColor(color.R, color.G, color.B, 500);
         }
         else
         {

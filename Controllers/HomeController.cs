@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics;
+using System.Drawing;
 using HomeLightControl.CustomClasses;
 using HomeLightControl.HostedServices;
 using Microsoft.AspNetCore.Mvc;
@@ -16,6 +17,19 @@ public class HomeController : Controller
     {
         _logger = logger;
     }
+
+    public IActionResult ChangeBrightness(int brightness)
+    {
+        YeelightService.ChangeBrightness(brightness);
+        return Json("sent");
+    }
+
+    public IActionResult ChangeColor(string color)
+    {
+        Color newColor = ColorTranslator.FromHtml(color);
+        YeelightService.ChangeColor(newColor);
+        return Json(" received");
+    }
     private void UpdateLampData()
     {
         Task<LampData> lightOne = YeelightService.GetLamp(1);
@@ -24,6 +38,27 @@ public class HomeController : Controller
         ViewData["DEV2"] = lightTwo.Result.IsOn;
         ViewData["DEV1BR"] = lightOne.Result.Brightness;
         ViewData["DEV2BR"] = lightTwo.Result.Brightness;
+        ViewData["DEV1RGB"] = lightOne.Result.Color;
+        ViewData["DEV2RGB"] = lightTwo.Result.Color;
+    }
+    //GET request for lamp data
+    public IActionResult GetLampData()
+    {
+        try
+        {
+            UpdateLampData();   
+        }
+        catch (Exception e)
+        {
+            if (e.HResult == -2146233088)
+            {
+                _logger.LogError(e.Message);
+                return Json(new { success = false });
+            }
+        }
+        Color tmpColor = (Color)ViewData["DEV1RGB"];
+        string readableColor = ColorTranslator.ToHtml(tmpColor);
+        return Json(new { success = true, dev1 = ViewData["DEV1"].ToString(), dev1br = ViewData["DEV1BR"].ToString(), dev1rgb = readableColor});
     }
     public IActionResult Index()
     {
@@ -34,19 +69,64 @@ public class HomeController : Controller
         bool DeviceIsOn = power.Result.ToString() != "off";
         bool DeviceIsOn2 = power2.Result.ToString() != "off";
         */
-        UpdateLampData();
+        try
+        {
+            UpdateLampData();   
+        }
+        catch (Exception e)
+        {
+            if (e.HResult == -2146233088)
+            {
+                _logger.LogError(e.Message);
+                return RedirectToAction("RateError");
+            }
+        }
+
         return View();
     }
 
+    public IActionResult RateError()
+    {
+        return View();
+    }
     //turn on the light
     public IActionResult Toggle()
     {
         YeelightService.ToggleLamps();
         _logger.LogInformation("Turned on the light");
-        UpdateLampData();
+        try
+        {
+            UpdateLampData();   
+        }
+        catch (Exception e)
+        {
+            if (e.HResult == -2146233088)
+            {
+                _logger.LogError(e.Message);
+                return RedirectToAction("RateError");
+            }
+        }
         return RedirectToAction("Index");
     }
 
+    public IActionResult Reset()
+    {
+        YeelightService.ResetToWhite();
+        _logger.LogInformation("Reset the light to white");
+        try
+        {
+            UpdateLampData();   
+        }
+        catch (Exception e)
+        {
+            if (e.HResult == -2146233088)
+            {
+                _logger.LogError(e.Message);
+                return RedirectToAction("RateError");
+            }
+        }
+        return RedirectToAction("Index");
+    }
     [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
     public IActionResult Error()
     {

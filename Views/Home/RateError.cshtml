@@ -1,0 +1,26 @@
+
+@{
+    ViewData["Title"] = "RateError";
+}
+
+<div class = "outer" style="height: 100vh;">
+    <div class="wrapper text-center">
+        <h1> Oops! You are being rate-limited!</h1>
+        <h5> Don't switch options too fast, okay?</h5>
+        <h6> Time left: <span id ="time">60</span></h6>
+    </div>
+</div>
+
+<script type="text/javascript">
+$(document).ready(function () {
+    timing = 60;
+    $('#time').html(timing);
+    myTimer = setInterval(function() {
+      --timing;
+      $('#time').html(timing);
+      if (timing === 0) {
+        window.location.replace("@Url.Action("Index", "Home")");   
+      }
+    }, 1000);
+});
+</script>
