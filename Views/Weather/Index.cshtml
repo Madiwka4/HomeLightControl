@@ -1,0 +1,27 @@
+@using Newtonsoft.Json.Linq
+@model Newtonsoft.Json.Linq.JObject
+@{
+    ViewData["Title"] = "Weather";
+    JObject weather = Model;
+    string temp = "unknown";
+    if (weather["main"] != null)
+    {
+        temp = ((int)weather["main"]["temp"]-273).ToString();
+    }
+    
+}
+<div class = "pt-2 row text-center">
+    <a href="@Url.Action("Index", "Home")" class="col-4 display-6 main-link">Light Control</a>
+    <h2 class="col-4 display-4">Weather</h2>
+    <a class="col-4 display-6 main-link">News</a>
+</div>
+<div class = "outer pt-1" style="height: 100vh;">
+    <div class="wrapper text-center">
+        <h1>Current Weather in Astana: </h1>
+        <h2>@temp °C</h2>
+    </div>
+</div>
+
+<script type="text/javascript">
+
+</script>

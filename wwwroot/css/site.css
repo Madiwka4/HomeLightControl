@@ -37,3 +37,9 @@ html {
 .btndiv{
     padding: 1rem;
 }
+
+.main-link{
+    text-decoration: none;
+    color: black;
+    height: 1rem;
+}

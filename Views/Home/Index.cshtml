@@ -22,6 +22,7 @@
         error = true;
 
     }
+    //The straightest thing you can do, is watch gay porn - Sunday, 2023
 
 }
 @functions
@@ -37,13 +38,19 @@
         return InvertedColor;
     }
 }
-<div class = "outer" style="height: 100vh;">
+        <div class = "row text-center pt-2" style="height: 10vh;">
+            <a href="@Url.Action("Index", "Weather")" class="col-4 display-6 main-link">Weather</a>
+            <h2 class="col-4 display-4">Light Control</h2>
+            <a class="col-4 display-6 main-link">News</a>
+            </div>
+<div class = "outer pt-4" style="height: 90vh;">
+
     <div class="wrapper text-center">
-        <h1 class="display-4">Light Control!</h1>
+
         @{
             if (!error)
             {
-                <button id="mainBTN" type="button" style="background-color: @ConvertToHex((Color)ViewData["DEV1RGB"]); color: @ConvertToHex(InvertColor((Color)ViewData["DEV1RGB"]))" onclick = "location.href='@Url.Action("Toggle", "Home")'" class="custom-button btn @{ if ((bool)ViewData["DEV1"]) {@Html.Raw("btn-success")} else {@Html.Raw("btn-danger")} }">
+                <button id="mainBTN" type="button" style="background-color: @ConvertToHex((Color)ViewData["DEV1RGB"]); color: @ConvertToHex(InvertColor((Color)ViewData["DEV1RGB"]))" onclick="location.href='@Url.Action("Toggle", "Home")'" class="custom-button btn @{ if ((bool)ViewData["DEV1"]) {@Html.Raw("btn-success")} else {@Html.Raw("btn-danger")} }">
                     @{
                         if ((bool)ViewData["DEV1"])
                         {
@@ -61,13 +68,12 @@
                         <input type="range" min="1" max="100" value="@ViewData["DEV1BR"]" class="slider" id="slider"/>
                     </div>
                     <div class="pickerdiv">
-                        <input type="color" min="1" max="100" class="colorpicker" id="picker" value="@ConvertToHex((Color)ViewData["DEV1RGB"])" />
+                        <input type="color" min="1" max="100" class="colorpicker" id="picker" value="@ConvertToHex((Color)ViewData["DEV1RGB"])"/>
                     </div>
                     <div class="btndiv">
-                        <button id="resetBTN" type="btn" class="btn btn-secondary" onclick = "location.href='@Url.Action("Reset", "Home")'">Reset</button>
+                        <button id="resetBTN" type="btn" class="btn btn-secondary" onclick="location.href='@Url.Action("Reset", "Home")'">Reset</button>
                     </div>
                 }
-                <p>@status</p>
             }
             else
             {
@@ -156,3 +162,4 @@
         });
     });
 </script>
+
