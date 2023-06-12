@@ -4,21 +4,65 @@
     ViewData["Title"] = "Weather";
     JObject weather = Model;
     string temp = "unknown";
+    int weatherCode = 0;
     if (weather["main"] != null)
     {
         temp = ((int)weather["main"]["temp"]-273).ToString();
+        weatherCode = (int)weather["weather"][0]["id"];
     }
-    
+
 }
 <div class = "pt-2 row text-center">
     <a href="@Url.Action("Index", "Home")" class="col-4 display-6 main-link">Light Control</a>
     <h2 class="col-4 display-4">Weather</h2>
     <a class="col-4 display-6 main-link">News</a>
 </div>
-<div class = "outer pt-1" style="height: 100vh;">
-    <div class="wrapper text-center">
+<div class = "outer mt-5" style="height: 80vh;">
+    <div class="text-center">
         <h1>Current Weather in Astana: </h1>
-        <h2>@temp °C</h2>
+        <h1 class="weather-text">@temp °C</h1>
+        @{
+            if (weatherCode == 800)
+            {
+                <i class="bi bi-brightness-high-fill big-sun fa-spin"></i>
+            }
+            else if (weatherCode > 800 && weatherCode < 900)
+            {
+                <i class="bi bi-cloud-sun-fill big-icon"></i>
+            }
+            else if (weatherCode >= 600 && weatherCode < 700)
+            {
+                <i class="bi bi-snow2 big-icon"></i>
+                if (weatherCode == 602)
+                {
+                    <i class="bi bi-snow2 big-icon"></i><i class="bi bi-snow2 big-icon"></i>
+                }
+            }
+            else if (weatherCode >= 500 && weatherCode < 600)
+            {
+                if (weatherCode >= 502)
+                {
+                    <i class="bi bi-cloud-rain-heavy-fill big-icon"></i>
+                }
+                else
+                {
+                    <i class="bi bi-cloud-rain-fill big-icon"></i>
+                }
+               
+            }
+            else if (weatherCode >= 300 && weatherCode < 400)
+            {
+                <i class="bi bi-cloud-drizzle-fill big-icon"></i>
+            }
+            else if (weatherCode >= 200 && weatherCode < 300)
+            {
+                <i class="bi bi-cloud-lightning-rain-fill big-icon"></i>
+            }
+            else
+            {
+                <i class="bi bi-cloud-fill big-icon"></i>
+            }
+        }
     </div>
 </div>
 

@@ -37,9 +37,33 @@ html {
 .btndiv{
     padding: 1rem;
 }
-
+.weather-text{
+    font-size: 5rem;
+    /* futuristic, large font */
+    font-family: 'Orbitron', sans-serif;
+}
 .main-link{
     text-decoration: none;
     color: black;
     height: 1rem;
+}
+.big-sun {
+    display: inline-block;
+    font-size: 9rem;
+    color: #ffab00;
+    transform-origin: center;
+    height: 9rem;
+    vertical-align: text-top;
+}
+.big-icon{
+    height: 9rem;
+    font-size: 9rem;
+}
+@keyframes spin-animation {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(359deg);
+    }
 }
