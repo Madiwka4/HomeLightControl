@@ -1,5 +1,6 @@
 using System.Drawing;
 using HomeLightControl.CustomClasses;
+using Newtonsoft.Json.Linq;
 using YeelightAPI;
 using YeelightAPI.Models;
 
@@ -11,13 +12,14 @@ public class YeelightService : IHostedService
     private static DeviceGroup _lights;
     private static Device _lightOne;
     private static Device _lightTwo;
-    
+    private static JObject _settings;
     public YeelightService(ILogger<YeelightService> logger)
     {
         _logger = logger;
         _lights = new DeviceGroup();
-        _lightOne = new Device("192.168.1.65");
-        _lightTwo = new Device("192.168.1.78");
+        _settings = JObject.Parse(System.IO.File.ReadAllText("App_Data/settings.json"));
+        _lightOne = new Device((string)_settings["lamp1IP"]);
+        _lightTwo = new Device((string)_settings["lamp2IP"]);
     }
     
     public Task StartAsync(CancellationToken cancellationToken)
